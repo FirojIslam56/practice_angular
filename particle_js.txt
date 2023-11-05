@@ -1,0 +1,80 @@
+6 Nov 2023
+=========================HTML===================
+<div class="mydiv" (mousemove)="myFunc($event)"></div>
+===================HTML====End==================
+
+===============CSS===============
+.mydiv {
+  width: 500px;
+  height: 400px;
+  background: #111;
+  position: relative;
+  overflow: hidden;
+}
+
+.mydiv span {
+  width: 10px;
+  height: 10px;
+  background: red;
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+
+}
+.mydiv span::before{
+  content: '';
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: animate 2s linear infinite;
+}
+@keyframes animate{
+  0%{
+    transform: translate(0);
+  }
+  100%{
+    transform: translate(300px);
+  }
+}
+
+===========CSS===End=============
+
+===========TS===============
+import { Component, ElementRef, Renderer2 } from '@angular/core';
+
+@Component({
+  selector: 'app-particle-js',
+  templateUrl: './particle-js.component.html',
+  styleUrls: ['./particle-js.component.css']
+})
+export class ParticleJsComponent {
+  constructor(private renderer: Renderer2, private el: ElementRef) {}
+  myFunc(event: MouseEvent):void{
+    const mydiv = this.el.nativeElement.querySelector('.mydiv');
+    const particles = this.renderer.createElement('span');
+    const x = event.offsetX;
+    const y = event.offsetY;
+
+    mydiv?.appendChild(particles);
+
+    particles.style.left = x + 'px';
+    particles.style.top = y + 'px';
+
+    const size = Math.random() * 6;
+    particles.style.width = 2 + size + 'px';
+    particles.style.height = 2 + size + 'px';
+
+    const transformValue = Math.random() * 360;
+    particles.style.transform = 'rotate(' + transformValue + 'deg)';
+
+
+    setTimeout(()=>{
+      mydiv?.removeChild(particles);
+    }, 1000);
+
+  }
+}
+
+===========TS====End============
